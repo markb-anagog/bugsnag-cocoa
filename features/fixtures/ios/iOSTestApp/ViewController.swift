@@ -58,7 +58,7 @@ class ViewController: UIViewController {
         else {
             // Automation mode
             config = BugsnagConfiguration("12312312312312312312312312312312")
-            config.endpoints = BugsnagEndpointConfiguration(notify: "http://bs-local.com:9339/notify", sessions: "http://bs-local.com:9339/sessions")
+            config.endpoints = BugsnagEndpointConfiguration(notify: "http://maze-local:9339/notify", sessions: "http://maze-local:9339/sessions")
         }
 
         let allowedErrorTypes = BugsnagErrorTypes()
