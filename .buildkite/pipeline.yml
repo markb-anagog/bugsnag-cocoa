@@ -21,7 +21,7 @@ steps:
     key: cocoa_fixture
     timeout_in_minutes: 30
     agents:
-      queue: opensource-arm-mac-cocoa-12
+      queue: ms-arm-12-8
     artifact_paths:
       - features/fixtures/ios/output/iOSTestApp.ipa
       - features/fixtures/macos/output/macOSTestApp.zip
@@ -32,7 +32,7 @@ steps:
   - label: Static framework and Swift Package Manager builds
     timeout_in_minutes: 10
     agents:
-      queue: opensource-arm-mac-cocoa-12
+      queue: ms-arm-12-8
     concurrency: 3
     concurrency_group: cocoa-unit-tests
     commands:
@@ -42,7 +42,7 @@ steps:
   - label: Carthage
     timeout_in_minutes: 15
     agents:
-      queue: opensource-arm-mac-cocoa-12
+      queue: ms-arm-12-8
     concurrency: 3
     concurrency_group: cocoa-unit-tests
     commands:
@@ -59,7 +59,7 @@ steps:
   - label: ARM macOS 12 unit tests
     timeout_in_minutes: 10
     agents:
-      queue: opensource-arm-mac-cocoa-12
+      queue: ms-arm-12-8
     commands:
       - ./scripts/run-unit-tests.sh PLATFORM=macOS
     artifact_paths:
@@ -88,7 +88,7 @@ steps:
   - label: iOS 14 unit tests
     timeout_in_minutes: 10
     agents:
-      queue: opensource-arm-mac-cocoa-12
+      queue: ms-arm-12-8
     commands:
       - ./scripts/run-unit-tests.sh PLATFORM=iOS OS=14.5
     artifact_paths:
@@ -106,7 +106,7 @@ steps:
   - label: tvOS 14 unit tests
     timeout_in_minutes: 10
     agents:
-      queue: opensource-arm-mac-cocoa-12
+      queue: ms-arm-12-8
     commands:
       - ./scripts/run-unit-tests.sh PLATFORM=tvOS OS=14.5
     artifact_paths:
@@ -236,7 +236,7 @@ steps:
       - cocoa_fixture
     timeout_in_minutes: 10
     agents:
-      queue: opensource-arm-mac-cocoa-12
+      queue: ms-arm-12-8
     plugins:
       artifacts#v1.3.0:
         download: "features/fixtures/macos/output/macOSTestApp.zip"
@@ -258,7 +258,7 @@ steps:
   - label: 'macOS 12 stress test'
     timeout_in_minutes: 3
     agents:
-      queue: opensource-arm-mac-cocoa-12
+      queue: ms-arm-12-8
     env:
       STRESS_TEST: "true"
     commands:
