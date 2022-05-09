@@ -31,6 +31,7 @@
 
 //#define BSG_KSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
+#include "bsg_sprintf.h"
 
 #include <cxxabi.h>
 #include <dlfcn.h>
@@ -149,8 +150,8 @@ static void CPPExceptionTerminate(void) {
     }
 #define CATCH_VALUE(TYPE, PRINTFTYPE)                                          \
     catch (TYPE value) {                                                       \
-        snprintf(descriptionBuff, sizeof(descriptionBuff), "%" #PRINTFTYPE,    \
-                 value);                                                       \
+        bsg_snprintf(descriptionBuff, sizeof(descriptionBuff),                 \
+                     "%" #PRINTFTYPE, value);                                  \
         crashReason = descriptionBuff;                                         \
     }
     CATCH_VALUE(char, d)

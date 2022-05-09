@@ -44,6 +44,7 @@
 #include "BSG_KSCrashContext.h"
 #include "BSG_KSCrashSentry.h"
 #include "BSG_Symbolicate.h"
+#include "bsg_sprintf.h"
 
 #include <mach-o/loader.h>
 #include <sys/time.h>
@@ -250,8 +251,8 @@ void bsg_kscrw_i_addJSONElement(const BSG_KSCrashReportWriter *const writer,
                                               jsonElement, strlen(jsonElement));
     if (jsonResult != BSG_KSJSON_OK) {
         char errorBuff[100];
-        snprintf(errorBuff, sizeof(errorBuff), "Invalid JSON data: %s",
-                 bsg_ksjsonstringForError(jsonResult));
+        bsg_snprintf(errorBuff, sizeof(errorBuff), "Invalid JSON data: %s",
+                     bsg_ksjsonstringForError(jsonResult));
         bsg_ksjsonbeginObject(bsg_getJsonContext(writer), key);
         bsg_ksjsonaddStringElement(bsg_getJsonContext(writer),
                                    BSG_KSCrashField_Error, errorBuff,
@@ -537,14 +538,15 @@ void bsg_kscrw_i_logBacktraceEntry(const int entryNum, const uintptr_t address,
 
     const char *fname = info->image ? bsg_ksfulastPathEntry(info->image->name) : NULL;
     if (fname == NULL && info->image) {
-        sprintf(faddrBuff, BSG_POINTER_FMT, (uintptr_t)info->image->header);
-        fname = faddrBuff;
+        bsg_snprintf(faddrBuff, sizeof(faddrBuff),
+                     BSG_POINTER_FMT, (uintptr_t)info->image->header);
     }
 
     uintptr_t offset = address - (uintptr_t)info->function_address;
     const char *sname = info->function_name;
     if (sname == NULL && info->image) {
-        sprintf(saddrBuff, BSG_POINTER_SHORT_FMT, (uintptr_t)info->image->header);
+        bsg_snprintf(saddrBuff, sizeof(saddrBuff),
+                     BSG_POINTER_SHORT_FMT, (uintptr_t)info->image->header);
         sname = saddrBuff;
         offset = address - (uintptr_t)info->image->header;
     }
@@ -845,8 +847,8 @@ void bsg_kscrw_i_writeBasicRegisters(
         for (int reg = 0; reg < numRegisters; reg++) {
             registerName = bsg_ksmachregisterName(reg);
             if (registerName == NULL) {
-                snprintf(registerNameBuff, sizeof(registerNameBuff), "r%d",
-                         reg);
+                bsg_snprintf(registerNameBuff, sizeof(registerNameBuff),
+                             "r%d", reg);
                 registerName = registerNameBuff;
             }
             writer->addUIntegerElement(
@@ -876,8 +878,8 @@ void bsg_kscrw_i_writeExceptionRegisters(
         for (int reg = 0; reg < numRegisters; reg++) {
             registerName = bsg_ksmachexceptionRegisterName(reg);
             if (registerName == NULL) {
-                snprintf(registerNameBuff, sizeof(registerNameBuff), "r%d",
-                         reg);
+                bsg_snprintf(registerNameBuff, sizeof(registerNameBuff),
+                             "r%d", reg);
                 registerName = registerNameBuff;
             }
             writer->addUIntegerElement(
@@ -929,7 +931,8 @@ void bsg_kscrw_i_writeNotableRegisters(
     for (int reg = 0; reg < numRegisters; reg++) {
         registerName = bsg_ksmachregisterName(reg);
         if (registerName == NULL) {
-            snprintf(registerNameBuff, sizeof(registerNameBuff), "r%d", reg);
+            bsg_snprintf(registerNameBuff, sizeof(registerNameBuff),
+                         "r%d", reg);
             registerName = registerNameBuff;
         }
         bsg_kscrw_i_writeMemoryContentsIfNotable(
@@ -1265,7 +1268,7 @@ void bsg_kscrw_i_writeError(const BSG_KSCrashReportWriter *const writer,
                                              machExceptionName);
                 }
                 
-                snprintf(buffer, sizeof(buffer), "0x%llx", machCode);
+                bsg_snprintf(buffer, sizeof(buffer), "0x%llx", machCode);
                 writer->addStringElement(writer, BSG_KSCrashField_Code, buffer);
                 
                 if (machCodeName != NULL) {
@@ -1273,7 +1276,7 @@ void bsg_kscrw_i_writeError(const BSG_KSCrashReportWriter *const writer,
                                              machCodeName);
                 }
                 
-                snprintf(buffer, sizeof(buffer), "0x%llx", machSubCode);
+                bsg_snprintf(buffer, sizeof(buffer), "0x%llx", machSubCode);
                 writer->addStringElement(writer, BSG_KSCrashField_Subcode, buffer);
             }
             writer->endContainer(writer);

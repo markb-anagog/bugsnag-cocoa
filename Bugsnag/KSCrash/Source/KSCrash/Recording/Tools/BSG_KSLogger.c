@@ -26,8 +26,9 @@
 
 #include "BSG_KSLogger.h"
 
+#include "bsg_sprintf.h"
+
 #include <stdarg.h>
-#include <stdio.h>
 #include <string.h>
 #include <sys/errno.h>
 #include <sys/fcntl.h>
@@ -97,7 +98,7 @@ void bsg_i_kslog_logCBasic(const char *const fmt, ...) {
 
     va_list args;
     va_start(args, fmt);
-    int len = vsnprintf(buf, size, fmt, args);
+    int len = bsg_vsnprintf(buf, size, fmt, args);
     if (len > size) {
         len = size;
     }
@@ -127,8 +128,8 @@ void bsg_i_kslog_logC(const char *const level, const char *const file,
     char buf[BSG_KSLOGGER_CBufferSize];
     const int size = sizeof(buf);
 
-    int len = snprintf(buf, size, "%s: %s:%u: %s(): ",
-                       level, lastPathEntry(file), line, function);
+    int len = bsg_snprintf(buf, size, "%s: %s:%u: %s(): ",
+                           level, lastPathEntry(file), line, function);
     if (len < 0) {
         return;
     }
@@ -140,7 +141,7 @@ void bsg_i_kslog_logC(const char *const level, const char *const file,
         va_list args;
         va_start(args, fmt);
         int max = size - len;
-        int msglen = vsnprintf(buf + len, max, fmt, args);
+        int msglen = bsg_vsnprintf(buf + len, max, fmt, args);
         va_end(args);
         unlikely_if(msglen < 0) {
             return;

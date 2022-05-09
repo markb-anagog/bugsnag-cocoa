@@ -35,9 +35,9 @@
 
 //#define BSG_KSLogger_LocalLevel TRACE
 #include "BSG_KSLogger.h"
+#include "bsg_sprintf.h"
 
 #include <errno.h>
-#include <stdio.h>
 #include <stdlib.h>
 
 // ============================================================================
@@ -200,8 +200,8 @@ bool bsg_kscrashsentry_installSignalHandler(
             char sigNameBuff[30];
             const char *sigName = bsg_kssignal_signalName(fatalSignals[i]);
             if (sigName == NULL) {
-                snprintf(sigNameBuff, sizeof(sigNameBuff), "%d",
-                         fatalSignals[i]);
+                bsg_snprintf(sigNameBuff, sizeof(sigNameBuff), "%d",
+                             fatalSignals[i]);
                 sigName = sigNameBuff;
             }
             BSG_KSLOG_ERROR("sigaction (%s): %s", sigName, strerror(errno));
